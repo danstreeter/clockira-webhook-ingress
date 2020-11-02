@@ -1,5 +1,4 @@
 # System Imports
-import asyncio
 import pytest
 from unittest import mock
 from unittest.mock import MagicMock
@@ -12,31 +11,34 @@ from main import create_app
 import config
 # Local Imports
 
-class AsyncMock(MagicMock):
-    async def __call__(self, *args, **kwargs):
-        return super(AsyncMock, self).__call__(*args, **kwargs)
-
-@pytest.fixture
-def client():
-    app = create_app()
-
-    app.config['TESTING'] = True
-
-    with app.test_client() as client:
-        yield client
-
-def test_no_rootpatch(client):
+@mock.patch('comms_rabbitmq.get_connection')
+def test_no_rootpatch(get_conn):
     """
     Tests that a blank route returns a 404
     """
+    get_conn = MagicMock()
+    get_conn.return_value = True
+    get_conn.channel = MagicMock()
+
+    app = create_app()
+    app.config['TESTING'] = True
+    client = app.test_client()
     rv = client.get('/')
     assert rv.status_code == 404
 
-def test_healthcheck(client):
+@mock.patch('comms_rabbitmq.get_connection')
+def test_healthcheck(get_conn):
     """
     Tests that the healthcheck returns a 200
     and a text response of 'OK'
     """
+    get_conn = MagicMock()
+    get_conn.return_value = True
+    get_conn.channel = MagicMock()
+
+    app = create_app()
+    app.config['TESTING'] = True
+    client = app.test_client()
     rv = client.get('/healthcheck')
     assert rv.status_code == 200
     assert b"OK" in rv.data
@@ -45,8 +47,8 @@ def test_healthcheck(client):
 @mock.patch('comms_rabbitmq.get_connection')
 def test_rmq_runs_webhook(get_conn, mocked_method):
     """
-    Tests that when a webhook is recieved
-    RabbitMQ method is run
+    Tests that when the config mode is RABBITMQ
+    a publish_nats event is run
     """
     get_conn = MagicMock()
     get_conn.return_value = True
@@ -62,3 +64,6 @@ def test_rmq_runs_webhook(get_conn, mocked_method):
     mocked_method.assert_called_once()
 
     assert rv.status_code == 200
+
+# How to get Flask config
+#    print(client.application.config)
