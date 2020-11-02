@@ -1,0 +1,8 @@
+scratch/
+.env
+venv/
+.venv/
+
+dev_autoload.sh
+Dockerfile
+**/local_creds.py

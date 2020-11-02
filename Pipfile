@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+pylint = "*"
+coverage = "*"
+flake8 = "*"
+flake8-html = "*"
+pylint-json2html = "*"
+
+[packages]
+gunicorn = "*"
+flask = "*"
+pika = "*"
+
+[requires]
+python_version = "3.8"
