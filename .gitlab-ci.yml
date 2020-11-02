@@ -1,0 +1,43 @@
+image: "python:3.8.3"
+
+before_script:
+  - python --version
+  - pip install pipenv
+  - pipenv --python 3.8.3
+  - pipenv install --dev
+
+  # Create all the required directories for the artifacts
+  - rm -f .coverage
+  - rm -rf ./test-reports
+  - mkdir -p test-reports/{flake8,htmlcov,pylint}
+
+stages:
+  - Static Analysis
+  - test
+
+
+flake8:
+  stage: Static Analysis
+  script:
+    - pipenv run flake8 ./src --exit-zero --format=html --htmldir=test-reports/flake8/
+  artifacts:
+    paths:
+      - test-reports/flake8/
+
+pylint:
+  stage: Static Analysis
+  script:
+    - pipenv run pylint --output-format=json ./src > test-reports/pylint/pylint.json || exit 0
+    - pipenv run pylint-json2html -o test-reports/pylint/pylint.html test-reports/pylint/pylint.json
+  artifacts:
+    paths:
+      - test-reports/pylint/
+
+test:
+  stage: test
+  script:
+    - PYTHONPATH=./src pipenv run coverage run -m pytest
+    - pipenv run coverage html
+  artifacts:
+    paths:
+      - test-reports/htmlcov/
