@@ -34,7 +34,7 @@ dev:
 	pipenv run flask run --host=0.0.0.0 --port=8998
 
 run-like-prod:
-	pipenv run gunicorn --workers=2 --threads=4 --worker-class=gthread --log-file=- main:create_app
+	pipenv run gunicorn --workers=2 --threads=4 --worker-class=gthread --log-file=- wsgi:app
 
 lint:
 	pipenv run pylint ./src

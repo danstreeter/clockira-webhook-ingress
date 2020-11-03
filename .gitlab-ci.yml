@@ -27,7 +27,7 @@ flake8:
 pylint:
   stage: Static Analysis
   script:
-    - pipenv run pylint --output-format=json ./src > test-reports/pylint/pylint.json || exit 0
+    - pipenv run pylint --output-format=json ./src > test-reports/pylint/pylint.json || echo "Pylint Run"
     - pipenv run pylint-json2html -o test-reports/pylint/pylint.html test-reports/pylint/pylint.json
   artifacts:
     paths:

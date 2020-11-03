@@ -24,4 +24,4 @@ CMD gunicorn \
     --threads 4 \
     --worker-class gthread \
     --bind 0.0.0.0:8000 \
-    main:create_app
+    wsgi:app

@@ -12,6 +12,7 @@ import pika
 
 # Local Imports
 import config
+from exceptions import ConnectionError
 
 
 def get_connection():

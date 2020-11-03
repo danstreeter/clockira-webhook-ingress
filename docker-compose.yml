@@ -11,7 +11,7 @@ services:
       - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - ./docker/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
 
-  batch_ingress:
+  webhook_ingress:
     build:
       context: ./
       dockerfile: Dockerfile

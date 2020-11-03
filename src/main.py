@@ -6,11 +6,9 @@ from flask import abort, Flask, request
 # Application Imports
 
 # Local Imports
+import config
 
-
-def create_app(config=None):
-    if config is None:
-        import config
+def create_app():
     print(f"Starting HTTP Ingress v{config.APP_VERSION}")
 
     app = Flask(__name__)
